@@ -1,13 +1,6 @@
-REBAR := $(shell which rebar3)
+REBAR := $(shell which rebar)
 
-rebar-check:
-ifndef REBAR
-	@echo "rebar3 is not available on your PATH !!"
-	@echo
-	@echo "wget https://s3.amazonaws.com/rebar3/rebar3 && chmod +x rebar3"
-	@echo "mv rebar3 /usr/local/bin/rebar3"
-	exit 1
-endif
+all: get-deps compile
 
 clean:
 	@rm -rf $(CURDIR)/_build $(CURDIR)/ebin/*.beam
@@ -15,12 +8,15 @@ clean:
 clean-deps:
 	@rm -rf $(CURDIR)/deps
 
+get-deps:
+	@$(REBAR) get-deps
+
 distclean: clean-deps
 
 dialyzer: rebar-check
 	@$(REBAR) dialyzer
 
-compile: rebar-check
+compile:
 	@$(REBAR) compile
 
 shell: rebar-check
@@ -37,4 +33,4 @@ test-cover-html: rebar-check
 
 travis: clean distclean compile test-cover
 
-.PHONY: clean deps compile dialyzer test-cover test-cover-html
+.PHONY: all clean get-deps compile dialyzer test-cover test-cover-html

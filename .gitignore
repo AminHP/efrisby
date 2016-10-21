@@ -1,4 +1,4 @@
-/ebin/*.beam
+/ebin
 _build
 /rebar
 rebar.lock
